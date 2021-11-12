@@ -1,5 +1,8 @@
 package com.coderace.model.dtos;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class ExampleResponseDTO {
     private Long longValue;
     private Double doubleValue;
