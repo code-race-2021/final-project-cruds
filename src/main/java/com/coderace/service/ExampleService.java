@@ -28,9 +28,7 @@ public class ExampleService {
         final Example example = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
                 requestDTO.getStringValue(), dateValue, enumValue);
 
-        repository.save(example);
-
-        return buildExampleResponseDTO(example);
+        return buildExampleResponseDTO(repository.save(example));
     }
 
     private LocalDateTime resolveDateValue(String dateValue) {
@@ -52,7 +50,7 @@ public class ExampleService {
         }
     }
 
-    private ExampleResponseDTO buildExampleResponseDTO(Example example) {
+    protected ExampleResponseDTO buildExampleResponseDTO(Example example) {
         final ExampleResponseDTO responseDTO = new ExampleResponseDTO();
 
         responseDTO
