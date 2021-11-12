@@ -1,8 +1,11 @@
 package com.coderace.model.dtos;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ExampleResponseDTO {
     private Long longValue;
     private Double doubleValue;
