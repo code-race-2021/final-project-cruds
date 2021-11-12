@@ -164,6 +164,7 @@
 				<version>0.8.0</version>
 				<configuration combine.self="override">
 					<excludes>
+						<exclude>**/com/coderace/sql/SQLController.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>
