@@ -15,12 +15,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 @DisplayName("ExampleService test | unit")
 @ExtendWith(MockitoExtension.class)
@@ -132,6 +133,31 @@ class ExampleServiceTest {
 
         assertEquals(1, result.size());
         assertEquals(service.buildExampleResponseDTO(example), result.get(0));
+    }
+
+    @Test
+    @DisplayName("getByLongValue | ok")
+    void getByLongValueOk() {
+        final Example example = this.defaultExample();
+
+        when(repository.getByLongValue(1L)).thenReturn(Optional.of(example));
+
+        final ExampleResponseDTO result = service.getByLongValue(1L);
+
+        assertEquals(service.buildExampleResponseDTO(example), result);
+    }
+
+    @Test
+    @DisplayName("getByLongValue | not found | should throw BadRequestException")
+    void getByLongValueNotFound() {
+        when(repository.getByLongValue(1L)).thenReturn(Optional.empty());
+
+        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.getByLongValue(1L));
+
+        assertAll("Expected exception",
+                () -> assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode()),
+                () -> assertEquals(String.format("Example with long_value [%s] not found", 1L), exception.getMessage())
+        );
     }
 
     private Example defaultExample() {

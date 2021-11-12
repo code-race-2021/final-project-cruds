@@ -31,6 +31,8 @@ public class Example {
     @Column(name = "enum_value")
     private ExampleEnum enumValue;
 
+    public Example() {
+    }
 
     public Example(Long longValue, Double doubleValue, String stringValue, LocalDateTime dateValue, ExampleEnum enumValue) {
         this.longValue = longValue;

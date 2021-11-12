@@ -30,4 +30,13 @@ public class ExampleController {
     public ResponseEntity<Object> getAll() {
         return ResponseEntity.ok().body(this.service.getAll());
     }
+
+    @GetMapping("/{longValue}")
+    public ResponseEntity<Object> getByLongValue(@PathVariable long longValue) {
+        try {
+            return ResponseEntity.ok().body(this.service.getByLongValue(longValue));
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
+        }
+    }
 }

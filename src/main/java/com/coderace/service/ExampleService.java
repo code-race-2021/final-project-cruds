@@ -6,6 +6,7 @@ import com.coderace.model.entities.Example;
 import com.coderace.model.enums.ExampleEnum;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.ExampleRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -67,5 +68,12 @@ public class ExampleService {
                 .setEnumValue(example.getEnumValue().getCode());
 
         return responseDTO;
+    }
+
+    public ExampleResponseDTO getByLongValue(long longValue) {
+        return this.repository.getByLongValue(longValue)
+                .map(this::buildExampleResponseDTO)
+                .orElseThrow(() -> new BadRequestException(HttpStatus.NOT_FOUND.value(),
+                        String.format("Example with long_value [%s] not found", longValue)));
     }
 }

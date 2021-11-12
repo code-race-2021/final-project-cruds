@@ -98,4 +98,41 @@ class ExampleControllerTest {
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertEquals(expectedResponse, actualResponse);
     }
+
+    @Test
+    @DisplayName("getByLongValue | ok")
+    void getByLongValueOk() throws Exception {
+        // given
+        final ExampleResponseDTO expectedResponse = new ExampleResponseDTO();
+
+        when(service.getByLongValue(1)).thenReturn(expectedResponse);
+
+        // when
+        final MvcResult result = mvc.perform(get("/example/1"))
+                .andReturn();
+
+        final ExampleResponseDTO actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), ExampleResponseDTO.class);
+
+        // then
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("getByLongValue | not found")
+    void getByLongValueNotFound() throws Exception {
+        // given
+        final BadRequestException expectedException = new BadRequestException(HttpStatus.NOT_FOUND.value(), "test-message");
+
+        when(service.getByLongValue(1)).thenThrow(expectedException);
+
+        // when
+        final MvcResult result = mvc.perform(get("/example/1"))
+                .andReturn();
+
+        // then
+        assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
+        assertEquals(expectedException.getMessage(), result.getResponse().getContentAsString());
+    }
 }
