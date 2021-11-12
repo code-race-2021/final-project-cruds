@@ -15,6 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -37,7 +40,7 @@ class ExampleServiceTest {
                 .setDateValue(LocalDateTime.MIN.toString())
                 .setEnumValue("b");
 
-        final Example example = new Example(1L, 2D, "a", LocalDateTime.MIN, ExampleEnum.B);
+        final Example example = this.defaultExample();
 
         when(repository.save(any(Example.class))).thenReturn(example);
 
@@ -116,4 +119,22 @@ class ExampleServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("getAll | ok")
+    void getAllOk() {
+        final Example example = this.defaultExample();
+
+        final List<Example> all = Collections.singletonList(example);
+
+        when(repository.findAll()).thenReturn(all);
+
+        final List<ExampleResponseDTO> result = service.getAll();
+
+        assertEquals(1, result.size());
+        assertEquals(service.buildExampleResponseDTO(example), result.get(0));
+    }
+
+    private Example defaultExample() {
+        return new Example(1L, 2D, "a", LocalDateTime.MIN, ExampleEnum.B);
+    }
 }

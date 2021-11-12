@@ -9,6 +9,8 @@ import com.coderace.repository.ExampleRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ExampleService {
@@ -29,6 +31,10 @@ public class ExampleService {
                 requestDTO.getStringValue(), dateValue, enumValue);
 
         return buildExampleResponseDTO(repository.save(example));
+    }
+
+    public List<ExampleResponseDTO> getAll() {
+        return this.repository.findAll().stream().map(this::buildExampleResponseDTO).collect(Collectors.toList());
     }
 
     private LocalDateTime resolveDateValue(String dateValue) {
