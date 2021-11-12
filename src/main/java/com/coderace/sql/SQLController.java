@@ -1,23 +1,28 @@
 package com.coderace.sql;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.*;
+import javax.persistence.Query;
+import javax.persistence.Tuple;
 import javax.transaction.Transactional;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sql")
 public class SQLController {
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired(required = false)
+    EntityManagerRepository repository;
 
     @PostMapping("/query")
     public ResponseEntity<Object> query(@RequestBody String query) {
-        final Query emQuery = em.createNativeQuery(query, Tuple.class);
+        final Query emQuery = repository.em().createNativeQuery(query, Tuple.class);
         final List<Tuple> queryRows = emQuery.getResultList();
 
         final List<Map<String, Object>> formattedRows = new ArrayList<>();
@@ -41,7 +46,7 @@ public class SQLController {
     @PostMapping("/script")
     @Transactional
     public ResponseEntity<Object> script(@RequestBody String query) {
-        final Query emQuery = em.createNativeQuery(query);
+        final Query emQuery = repository.em().createNativeQuery(query);
         final int totalRowsUpdated = emQuery.executeUpdate();
 
         String message = "Executed successfully.";
