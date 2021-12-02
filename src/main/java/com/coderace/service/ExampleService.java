@@ -31,13 +31,17 @@ public class ExampleService {
         final Example example = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
                 requestDTO.getStringValue(), dateValue, enumValue);
 
-        return buildExampleResponseDTO(repository.save(example));
+        repository.save(example);
+        return buildExampleResponseDTO(example);
     }
 
     public List<ExampleResponseDTO> getAll() {
         return this.repository.findAll().stream().map(this::buildExampleResponseDTO).collect(Collectors.toList());
     }
 
+
+
+    //
     private LocalDateTime resolveDateValue(String dateValue) {
         try {
             return LocalDateTime.parse(dateValue);
