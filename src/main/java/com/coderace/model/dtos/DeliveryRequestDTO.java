@@ -10,8 +10,6 @@ public class DeliveryRequestDTO {
     private String code;
     private String type;
 
-    // ¿tengo que agregar date, o no? ¿dónde seteo la fecha?
-
     public String getCode() {
         return code;
     }

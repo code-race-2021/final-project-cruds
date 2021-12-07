@@ -1,10 +1,7 @@
-package com.coderace.delivery;
+package com.coderace.model.enums;
 
 import java.util.Arrays;
 import java.util.Optional;
-
-import static java.util.Arrays.stream;
-
 
 public enum DeliveryType {
     REGULAR("regular", 3, 5d),

@@ -1,13 +1,11 @@
 package com.coderace.controller;
 
-import com.coderace.delivery.Delivery;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
-import com.coderace.model.dtos.ExampleRequestDTO;
-import com.coderace.model.dtos.ExampleResponseDTO;
+
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.service.DeliveryService;
-import com.coderace.service.ExampleService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +32,4 @@ public class DeliveryController {
         return ResponseEntity.ok().body(this.service.getAll());
     }
 
-    /*
-    -tengo dudas sobre si esto va o no-
-
-    @GetMapping("/{longValue}")
-    public ResponseEntity<Object> getByLongValue(@PathVariable long longValue) {
-        try {
-            return ResponseEntity.ok().body(this.service.getByLongValue(longValue));
-        } catch (BadRequestException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
-        }
-    }
-     */
 }

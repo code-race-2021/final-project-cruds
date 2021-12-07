@@ -1,10 +1,9 @@
 package com.coderace.delivery;
 
+import com.coderace.model.enums.DeliveryType;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
-//-Agregar un test unitario para el controller y el service
-
 
 @Entity
 @Table(name = "deliveries")
