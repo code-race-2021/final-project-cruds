@@ -1,6 +1,5 @@
 package com.coderace.service;
 
-import com.coderace.delivery.Delivery;
 import com.coderace.model.dtos.ExampleRequestDTO;
 import com.coderace.model.dtos.ExampleResponseDTO;
 import com.coderace.model.entities.Example;
@@ -29,10 +28,8 @@ public class ExampleService {
         final LocalDateTime dateValue = resolveDateValue(requestDTO.getDateValue());
         final ExampleEnum enumValue = resolveEnumValue(requestDTO.getEnumValue());
 
-        // final Example example = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
-           //     requestDTO.getStringValue(), dateValue, enumValue);
-
-        final Example exampleBeforePersistence = new Example();
+        final Example exampleBeforePersistence = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
+            requestDTO.getStringValue(), dateValue, enumValue);
 
         final Example exampleAfterPersistence = repository.save(exampleBeforePersistence);
 
@@ -45,7 +42,6 @@ public class ExampleService {
 
 
 
-    //
     private LocalDateTime resolveDateValue(String dateValue) {
         try {
             return LocalDateTime.parse(dateValue);
