@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

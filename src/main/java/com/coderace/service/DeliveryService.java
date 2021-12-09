@@ -6,10 +6,12 @@ import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class DeliveryService {
     private final DeliveryRepository repository;
 
@@ -21,10 +23,11 @@ public class DeliveryService {
         final DeliveryType type = resolveType(requestDTO.getType());
         final String code = resolveCode(requestDTO.getCode());
 
-        final Delivery delivery = new Delivery(code, type);
+        final Delivery deliveryBeforePersistence = new Delivery(code, type);
 
-        repository.save(delivery);
-        return buildDeliveryResponseDTO(delivery);
+        final Delivery deliveryAfterPersistence = repository.save(deliveryBeforePersistence);
+
+        return buildDeliveryResponseDTO(deliveryAfterPersistence);
     }
 
     public List<DeliveryResponseDTO> getAll() {

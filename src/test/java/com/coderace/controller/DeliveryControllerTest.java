@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@WebMvcTest
+@WebMvcTest(controllers = DeliveryController.class)
 @DisplayName("DeliveryController test | Unit")
 class DeliveryControllerTest {
     @Autowired
@@ -69,7 +69,7 @@ class DeliveryControllerTest {
         when(service.create(request)).thenThrow(expectedException);
 
         // when
-        final MvcResult result = mvc.perform(post("/example/create")
+        final MvcResult result = mvc.perform(post("/delivery/create")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andReturn();
 
