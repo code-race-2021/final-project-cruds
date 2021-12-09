@@ -1,6 +1,5 @@
 package com.coderace.service;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.coderace.delivery.Delivery;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
