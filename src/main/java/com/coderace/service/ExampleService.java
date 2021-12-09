@@ -29,10 +29,8 @@ public class ExampleService {
         final LocalDateTime dateValue = resolveDateValue(requestDTO.getDateValue());
         final ExampleEnum enumValue = resolveEnumValue(requestDTO.getEnumValue());
 
-        // final Example example = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
-           //     requestDTO.getStringValue(), dateValue, enumValue);
-
-        final Example exampleBeforePersistence = new Example();
+        final Example exampleBeforePersistence = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
+            requestDTO.getStringValue(), dateValue, enumValue);
 
         final Example exampleAfterPersistence = repository.save(exampleBeforePersistence);
 
