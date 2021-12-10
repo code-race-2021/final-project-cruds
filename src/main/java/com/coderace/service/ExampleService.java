@@ -28,15 +28,19 @@ public class ExampleService {
         final LocalDateTime dateValue = resolveDateValue(requestDTO.getDateValue());
         final ExampleEnum enumValue = resolveEnumValue(requestDTO.getEnumValue());
 
-        final Example example = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
-                requestDTO.getStringValue(), dateValue, enumValue);
+        final Example exampleBeforePersistence = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
+            requestDTO.getStringValue(), dateValue, enumValue);
 
-        return buildExampleResponseDTO(repository.save(example));
+        final Example exampleAfterPersistence = repository.save(exampleBeforePersistence);
+
+        return buildExampleResponseDTO(exampleAfterPersistence);
     }
 
     public List<ExampleResponseDTO> getAll() {
         return this.repository.findAll().stream().map(this::buildExampleResponseDTO).collect(Collectors.toList());
     }
+
+
 
     private LocalDateTime resolveDateValue(String dateValue) {
         try {
