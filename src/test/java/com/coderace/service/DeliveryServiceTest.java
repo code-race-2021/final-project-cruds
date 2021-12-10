@@ -91,8 +91,8 @@ class DeliveryServiceTest {
 
         assertAll("Expected dto",
                 () -> assertEquals(code, dto.getCode()),
-                () -> assertEquals(type.toString(), dto.getType())   // acá tuve que pasar el enum a String para poder pasar el test, ¿es correcto?
-                );
+                () -> assertEquals(type.getCode(), dto.getType())   // acá tuve que pasar el enum a String para poder pasar el test, ¿es correcto?
+        );
     }
 
     @Test
