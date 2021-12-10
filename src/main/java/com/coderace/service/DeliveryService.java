@@ -1,6 +1,6 @@
 package com.coderace.service;
 
-import com.coderace.delivery.Delivery;
+import com.coderace.model.entities.Delivery;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;

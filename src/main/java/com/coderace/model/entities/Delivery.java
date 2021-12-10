@@ -1,12 +1,16 @@
-package com.coderace.delivery;
+package com.coderace.model.entities;
 
 import com.coderace.model.enums.DeliveryType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "deliveries")
+@Getter
 public class Delivery {
 
     @Id
@@ -28,23 +32,6 @@ public class Delivery {
         this.code = code;
         this.type = type;
         this.date = null;
-    }
-
-
-    public int getId() {
-        return id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public DeliveryType getType() {
-        return type;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
     }
 }
 
