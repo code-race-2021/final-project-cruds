@@ -10,23 +10,45 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DeliveryTypeTest {
 
     @Test
-    @DisplayName("DeliveryType | fromCode | ok")
-    void deliveryTypeFromCodeOk() {
-    final String code = "express";
+    @DisplayName("fromCode | ok")
+    void fromCodeOk() {
+        final String codeExpress = "express";
+        final Optional<DeliveryType> deliveryFromCodeExpress = DeliveryType.fromCode(codeExpress);
 
-    final Optional<DeliveryType> deliveryFromCode = DeliveryType.fromCode(code);
+        final String codeRegular = "regular";
+        final Optional<DeliveryType> deliveryFromCodeRegular = DeliveryType.fromCode(codeRegular);
 
-    assertEquals(DeliveryType.EXPRESS, deliveryFromCode.get());
+        assertEquals(DeliveryType.EXPRESS, deliveryFromCodeExpress.get());
+        assertEquals(DeliveryType.REGULAR, deliveryFromCodeRegular.get());
     }
 
     @Test
-    @DisplayName("DeliveryType | fromCode | not found")
-    void deliveryTypeFromCodeNotFound() {
+    @DisplayName("fromCode | not found")
+    void fromCodeNotFound() {
         final String code = "x";
-
         final Optional<DeliveryType> deliveryFromCode = DeliveryType.fromCode(code);
 
         assertEquals(Optional.empty(), deliveryFromCode);
     }
 
+    @Test
+    @DisplayName("getDelay | ok")
+    void getDelayOk() {
+        assertEquals(3, DeliveryType.REGULAR.getDelay());
+        assertEquals(1, DeliveryType.EXPRESS.getDelay());
+    }
+
+    @Test
+    @DisplayName("getCost | ok")
+    void getCostOk() {
+        assertEquals(5, DeliveryType.REGULAR.getCost());
+        assertEquals(20, DeliveryType.EXPRESS.getCost());
+    }
+
+    @Test
+    @DisplayName("getCode")
+    void getCodeOk() {
+        assertEquals("regular", DeliveryType.REGULAR.getCode());
+        assertEquals("express", DeliveryType.EXPRESS.getCode());
+    }
 }
