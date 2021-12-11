@@ -5,6 +5,7 @@ import com.coderace.model.dtos.ProductResponseDTO;
 import com.coderace.model.entities.Product;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.ProductRepository;
+import io.netty.util.internal.StringUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class ProductService {
     }
 
     private void validate(ProductRequestDTO requestDTO) {
-        if (this.containsInvalidCharacters(requestDTO)) {
+        if (StringUtil.isNullOrEmpty(requestDTO.getSku()) || this.containsInvalidCharacters(requestDTO.getSku())) {
             throw new BadRequestException("Product sku is invalid");
         }
 
@@ -45,8 +46,8 @@ public class ProductService {
         }
     }
 
-    private boolean containsInvalidCharacters(ProductRequestDTO requestDTO) {
-        final List<String> chars = Arrays.asList(requestDTO.getSku().split(""));
+    private boolean containsInvalidCharacters(String sku) {
+        final List<String> chars = Arrays.asList(sku.split(""));
 
         return chars.stream().anyMatch(c -> !Character.isLetterOrDigit(c.charAt(0)));
     }

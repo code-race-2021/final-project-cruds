@@ -5,7 +5,6 @@ import com.coderace.model.dtos.ProductResponseDTO;
 import com.coderace.model.entities.Product;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.ProductRepository;
-import com.coderace.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +25,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
-    /*@Mock
+    @Mock
     ProductRepository repository;
 
     @InjectMocks
@@ -52,71 +50,65 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("create | given invalid price | should throw BadRequestException")
-    void createInvalidLongValueOk() {
-        final ProductRequestDTO requestDTO = new ProductRequestDTO().setPrice(-5d);
+    void createInvalidPriceOk() {
+        final ProductRequestDTO requestDTO = new ProductRequestDTO();
+
+        requestDTO.setSku("sku");
+        requestDTO.setPrice(-5d);
 
         final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
-                () -> assertEquals("longValue must be greater than 0", exception.getMessage())
+                () -> assertEquals("Product price must be positive", exception.getMessage())
         );
     }
 
     @Test
-    @DisplayName("create | given invalid date value | should throw BadRequestException")
-    void createInvalidDateValueOk() {
-        final String invalidDateString = "not-a-date";
+    @DisplayName("create | without sku | should throw BadRequestException")
+    void createWithoutSkuError() {
+        final ProductRequestDTO requestDTO = new ProductRequestDTO();
 
-        final ProductRequestDTO requestDTO = new ProductRequestDTO()
-                .setLongValue(1L)
-                .setDateValue(invalidDateString);
+        requestDTO.setSku(null);
 
         final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
-                () -> assertEquals("Invalid dateValue: " + invalidDateString, exception.getMessage())
+                () -> assertEquals("Product sku is invalid", exception.getMessage())
         );
     }
 
     @Test
-    @DisplayName("create | given invalid enum value | should throw BadRequestException")
-    void createInvalidEnumValueOk() {
-        final String invalidEnumString = "c";
+    @DisplayName("create | given invalid sku | should throw BadRequestException")
+    void createInvalidSkuError() {
+        final ProductRequestDTO requestDTO = new ProductRequestDTO();
 
-        final ProductRequestDTO requestDTO = new ProductRequestDTO()
-                .setLongValue(5L)
-                .setDateValue(LocalDateTime.MAX.toString())
-                .setEnumValue(invalidEnumString);
+        requestDTO.setSku("//&$@");
 
         final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
-                () -> assertEquals("Invalid enumValue: " + invalidEnumString, exception.getMessage())
+                () -> assertEquals("Product sku is invalid", exception.getMessage())
         );
     }
 
     @Test
     @DisplayName("buildProductResponseDTO | ok")
     void buildProductResponseDTO() {
-        final long longValue = 1L;
-        final double doubleValue = 2D;
-        final String stringValue = "a";
-        final LocalDateTime dateValue = LocalDateTime.MIN;
-        final ProductEnum enumValue = ProductEnum.B;
+        final String name = "name";
+        final String sku = "sku";
+        final double price = 50d;
 
-        final Product Product = new Product(longValue, doubleValue, stringValue, dateValue, enumValue);
+        final Product Product = new Product(name, sku, price);
 
         final ProductResponseDTO dto = service.buildProductResponseDTO(Product);
 
         assertAll("Expected dto",
-                () -> assertEquals(longValue, dto.getLongValue()),
-                () -> assertEquals(doubleValue, dto.getDoubleValue()),
-                () -> assertEquals(stringValue, dto.getStringValue()),
-                () -> assertEquals(dateValue.toString(), dto.getDateValue()),
-                () -> assertEquals(enumValue.getCode(), dto.getEnumValue())
+                () -> assertEquals(name, dto.getName()),
+                () -> assertEquals(sku, dto.getSku()),
+                () -> assertEquals(price, dto.getPrice())
         );
     }
 
@@ -136,31 +128,35 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("getByLongValue | ok")
-    void getByLongValueOk() {
-        final Product Product = this.defaultProduct();
+    @DisplayName("getBySku | ok")
+    void getBySkuOk() {
+        final Product product = this.defaultProduct();
 
-        when(repository.getByLongValue(1L)).thenReturn(Optional.of(Product));
+        final String sku = product.getSku();
 
-        final ProductResponseDTO result = service.getByLongValue(1L);
+        when(repository.getBySku(sku)).thenReturn(Optional.of(product));
 
-        assertEquals(service.buildProductResponseDTO(Product), result);
+        final ProductResponseDTO result = service.getBySku(sku);
+
+        assertEquals(service.buildProductResponseDTO(product), result);
     }
 
     @Test
-    @DisplayName("getByLongValue | not found | should throw BadRequestException")
-    void getByLongValueNotFound() {
-        when(repository.getByLongValue(1L)).thenReturn(Optional.empty());
+    @DisplayName("getBySku | not found | should throw BadRequestException")
+    void getBySkuNotFound() {
+        final String sku = "sku";
 
-        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.getByLongValue(1L));
+        when(repository.getBySku(sku)).thenReturn(Optional.empty());
+
+        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.getBySku(sku));
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode()),
-                () -> assertEquals(String.format("Product with long_value [%s] not found", 1L), exception.getMessage())
+                () -> assertEquals(String.format("Product with sku [%s] not found", sku), exception.getMessage())
         );
     }
 
     private Product defaultProduct() {
-        return new Product(1L, 2D, "a", LocalDateTime.MIN, ProductEnum.B);
-    }*/
+        return new Product("name", "sku", 100d);
+    }
 }
