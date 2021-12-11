@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponseDTO {
+    private Integer id;
     private String name;
     private String sku;
     private double price;

@@ -10,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "products")
 @Getter
+@AllArgsConstructor
 public class Product {
 
     @Id

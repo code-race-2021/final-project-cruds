@@ -55,6 +55,7 @@ public class ProductService {
     protected ProductResponseDTO buildProductResponseDTO(Product product) {
         final ProductResponseDTO responseDTO = new ProductResponseDTO();
 
+        responseDTO.setId(product.getId());
         responseDTO.setName(product.getName());
         responseDTO.setSku(product.getSku());
         responseDTO.setPrice(product.getPrice());

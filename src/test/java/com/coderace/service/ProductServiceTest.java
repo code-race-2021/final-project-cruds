@@ -97,15 +97,17 @@ class ProductServiceTest {
     @Test
     @DisplayName("buildProductResponseDTO | ok")
     void buildProductResponseDTO() {
+        final int id = 5;
         final String name = "name";
         final String sku = "sku";
         final double price = 50d;
 
-        final Product Product = new Product(name, sku, price);
+        final Product Product = new Product(id, name, sku, price);
 
         final ProductResponseDTO dto = service.buildProductResponseDTO(Product);
 
         assertAll("Expected dto",
+                () -> assertEquals(id, dto.getId()),
                 () -> assertEquals(name, dto.getName()),
                 () -> assertEquals(sku, dto.getSku()),
                 () -> assertEquals(price, dto.getPrice())
