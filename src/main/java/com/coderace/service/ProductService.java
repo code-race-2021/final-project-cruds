@@ -8,7 +8,7 @@ import com.coderace.repository.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,34 +24,39 @@ public class ProductService {
     public ProductResponseDTO create(ProductRequestDTO requestDTO) {
         this.validate(requestDTO);
 
-        final Product ProductBeforePersistence = new Product(requestDTO.getName(), requestDTO.getSku(), requestDTO.getPrice());
+        final Product productBeforePersistence = new Product(requestDTO.getName(), requestDTO.getSku(), requestDTO.getPrice());
 
-        final Product ProductAfterPersistence = repository.save(ProductBeforePersistence);
+        final Product productAfterPersistence = repository.save(productBeforePersistence);
 
-        return buildProductResponseDTO(ProductAfterPersistence);
+        return buildProductResponseDTO(productAfterPersistence);
     }
 
     public List<ProductResponseDTO> getAll() {
         return this.repository.findAll().stream().map(this::buildProductResponseDTO).collect(Collectors.toList());
     }
 
+    private void validate(ProductRequestDTO requestDTO) {
+        if (this.containsInvalidCharacters(requestDTO)) {
+            throw new BadRequestException("Product sku is invalid");
+        }
 
-
-    private LocalDateTime resolveDateValue(String dateValue) {
-        try {
-            return LocalDateTime.parse(dateValue);
-        } catch (Exception e) {
-            throw new BadRequestException("Invalid dateValue: " + dateValue);
+        if (requestDTO.getPrice() <= 0) {
+            throw new BadRequestException("Product price must be positive");
         }
     }
 
+    private boolean containsInvalidCharacters(ProductRequestDTO requestDTO) {
+        final List<String> chars = Arrays.asList(requestDTO.getSku().split(""));
 
-    private void validate(ProductRequestDTO requestDTO) {
-
+        return chars.stream().anyMatch(c -> !Character.isLetterOrDigit(c.charAt(0)));
     }
 
-    protected ProductResponseDTO buildProductResponseDTO(Product Product) {
+    protected ProductResponseDTO buildProductResponseDTO(Product product) {
         final ProductResponseDTO responseDTO = new ProductResponseDTO();
+
+        responseDTO.setName(product.getName());
+        responseDTO.setSku(product.getSku());
+        responseDTO.setPrice(product.getPrice());
 
         return responseDTO;
     }
