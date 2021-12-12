@@ -8,7 +8,6 @@ import lombok.*;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductResponseDTO {
     private Integer id;
