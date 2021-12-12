@@ -31,7 +31,7 @@ public class ProductController {
         return ResponseEntity.ok().body(this.service.getAll());
     }
 
-    @GetMapping("/{longValue}")
+    @GetMapping("/{sku}")
     public ResponseEntity<Object> getBySku(@PathVariable String sku) {
         try {
             return ResponseEntity.ok().body(this.service.getBySku(sku));
