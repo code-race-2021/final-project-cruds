@@ -84,6 +84,7 @@ class DeliveryServiceTest {
     void buildDeliveryResponseDTO() {
         final String code = "code1";
         final DeliveryType type = DeliveryType.REGULAR;
+        final int id = 0;
 
         final Delivery delivery = new Delivery(code, type);
 
@@ -91,7 +92,8 @@ class DeliveryServiceTest {
 
         assertAll("Expected dto",
                 () -> assertEquals(code, dto.getCode()),
-                () -> assertEquals(type.getCode(), dto.getType())   // acá tuve que pasar el enum a String para poder pasar el test, ¿es correcto?
+                () -> assertEquals(type.getCode(), dto.getType()),
+                () -> assertEquals(id, dto.getId())
         );
     }
 

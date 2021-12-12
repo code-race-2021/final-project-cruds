@@ -54,7 +54,8 @@ public class DeliveryService {
 
         responseDTO
                 .setCode(delivery.getCode())
-                .setType(delivery.getType().getCode());
+                .setType(delivery.getType().getCode())
+                .setId(delivery.getId());
 
         return responseDTO;
     }
