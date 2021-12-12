@@ -1,0 +1,138 @@
+package com.coderace.controller;
+
+import com.coderace.model.dtos.ProductRequestDTO;
+import com.coderace.model.dtos.ProductResponseDTO;
+import com.coderace.model.exceptions.BadRequestException;
+import com.coderace.service.ProductService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+@WebMvcTest(controllers = ProductController.class)
+@DisplayName("ProductController test | Unit")
+class ProductControllerTest {
+    
+    @Autowired
+    MockMvc mvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @MockBean
+    ProductService service;
+
+    @Test
+    @DisplayName("create | ok")
+    void createOk() throws Exception {
+        // given
+        final ProductRequestDTO request = new ProductRequestDTO();
+        final ProductResponseDTO expectedResponse = new ProductResponseDTO();
+
+        when(service.create(request)).thenReturn(expectedResponse);
+
+        // when
+        final MvcResult result = mvc.perform(post("/product/create")
+                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+                .andReturn();
+
+        final ProductResponseDTO actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), ProductResponseDTO.class);
+
+        // then
+        assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("create | when service throws BadRequestException | bad request")
+    void createBadRequest() throws Exception {
+        // given
+        final ProductRequestDTO request = new ProductRequestDTO();
+
+        final BadRequestException expectedException = new BadRequestException("test-message");
+
+        when(service.create(request)).thenThrow(expectedException);
+
+        // when
+        final MvcResult result = mvc.perform(post("/product/create")
+                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+                .andReturn();
+
+        // then
+        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+        assertEquals(expectedException.getMessage(), result.getResponse().getContentAsString());
+    }
+
+    @Test
+    @DisplayName("getAll | ok")
+    void getAllOk() throws Exception {
+        // given
+        final List<ProductResponseDTO> expectedResponse = new ArrayList<>();
+
+        when(service.getAll()).thenReturn(expectedResponse);
+
+        // when
+        final MvcResult result = mvc.perform(get("/product"))
+                .andReturn();
+
+        final List<ProductResponseDTO> actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ProductResponseDTO>>(){});
+
+        // then
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("getBySku | ok")
+    void getBySkuOk() throws Exception {
+        // given
+        final ProductResponseDTO expectedResponse = new ProductResponseDTO();
+
+        when(service.getBySku("sku")).thenReturn(expectedResponse);
+
+        // when
+        final MvcResult result = mvc.perform(get("/product/sku"))
+                .andReturn();
+
+        final ProductResponseDTO actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), ProductResponseDTO.class);
+
+        // then
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("getBySku | not found")
+    void getBySkuNotFound() throws Exception {
+        // given
+        final BadRequestException expectedException = new BadRequestException(HttpStatus.NOT_FOUND.value(), "test-message");
+
+        when(service.getBySku("sku")).thenThrow(expectedException);
+
+        // when
+        final MvcResult result = mvc.perform(get("/product/sku"))
+                .andReturn();
+
+        // then
+        assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
+        assertEquals(expectedException.getMessage(), result.getResponse().getContentAsString());
+    }
+}
