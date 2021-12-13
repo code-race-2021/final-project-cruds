@@ -36,6 +36,7 @@ class ServiceTypeTest {
         assertEquals(10, ServiceType.WARRANTY.getMultiplier());
         assertEquals(20, ServiceType.DEVOLUTION.getMultiplier());
     }
+
     @Test
     @DisplayName("getCode")
     void getCodeOk() {
