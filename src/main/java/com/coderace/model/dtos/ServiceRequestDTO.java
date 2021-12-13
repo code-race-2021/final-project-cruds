@@ -35,7 +35,7 @@ public class ServiceRequestDTO {
         return serviceType;
     }
 
-    public ServiceRequestDTO setEnumValue(String serviceType) {
+    public ServiceRequestDTO setServiceType(String serviceType) {
         this.serviceType = serviceType;
         return this;
     }
