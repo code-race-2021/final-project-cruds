@@ -27,9 +27,32 @@ public class DeliveryController {
         }
     }
 
+    // Agregar un endpoint que resuelva la siguiente necesidad:
+    // El cliente necesita obtener el presupuesto de un delivery para un valor dado en pesos
+    // y además necesita saber cuándo se realizaría la entrega si se solicita en ese momento.
+
+    // Agregar un endpoint en DeliveryController ‘/calculate’ que a partir de un delivery determinado (path variable sku),
+    // y enviando como queryParam un precio, devuelva un json con el costo de esa entrega y la fecha en que llegaría.
+
+    // Para esto se deberán usar los datos cost (multiplicador porcentual) y delay de DeliveryType.
+
+    // Ej.:
+    // Si el delivery es REGULAR y lo solicito el 2021-01-01 (primero de enero) para un producto que sale 200$, la respuesta debería ser así:
+
+    // GET → /delivery/calculate/{sku}?price=200
+
+    /*
+    {
+        "cost": 10, // el 5% del precio del producto
+            "arrival": "2021-01-04T00.00.000" // le sumo 3 días a LocalDateTime.now()
+    }
+     */
+
+    @GetMapping("/calculate")
+    public
+
     @GetMapping
     public ResponseEntity<Object> getAll() {
         return ResponseEntity.ok().body(this.service.getAll());
     }
-
 }
