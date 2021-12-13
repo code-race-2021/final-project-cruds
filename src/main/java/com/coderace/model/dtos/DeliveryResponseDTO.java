@@ -11,19 +11,23 @@ public class DeliveryResponseDTO {
     private String code;
     private String type;
 
+    public int getId() {
+        return id;
+    }
+
     public DeliveryResponseDTO setId(int id) {
         this.id = id;
         return this;
     }
 
-    public int getId() { return id; }
+    public String getCode() {
+        return code;
+    }
 
     public DeliveryResponseDTO setCode(String code) {
         this.code = code;
         return this;
     }
-
-    public String getCode() { return code; }
     
     public DeliveryResponseDTO setType(String type) {
         this.type = type;

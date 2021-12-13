@@ -2,6 +2,7 @@ package com.coderace.model.entities;
 
 import com.coderace.model.enums.ExampleEnum;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "examples")
+@NoArgsConstructor
 public class Example {
 
     @Id
@@ -30,9 +32,6 @@ public class Example {
     @Enumerated(EnumType.STRING)
     @Column(name = "enum_value")
     private ExampleEnum enumValue;
-
-    public Example() {
-    }
 
     public Example(Long longValue, Double doubleValue, String stringValue, LocalDateTime dateValue, ExampleEnum enumValue) {
         this.longValue = longValue;

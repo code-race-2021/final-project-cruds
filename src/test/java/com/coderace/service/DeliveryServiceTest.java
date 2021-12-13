@@ -1,6 +1,6 @@
 package com.coderace.service;
 
-import com.coderace.delivery.Delivery;
+import com.coderace.model.entities.Delivery;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
@@ -84,6 +84,7 @@ class DeliveryServiceTest {
     void buildDeliveryResponseDTO() {
         final String code = "code1";
         final DeliveryType type = DeliveryType.REGULAR;
+        final int id = 0;
 
         final Delivery delivery = new Delivery(code, type);
 
@@ -91,8 +92,9 @@ class DeliveryServiceTest {
 
         assertAll("Expected dto",
                 () -> assertEquals(code, dto.getCode()),
-                () -> assertEquals(type.toString(), dto.getType())   // acá tuve que pasar el enum a String para poder pasar el test, ¿es correcto?
-                );
+                () -> assertEquals(type.getCode(), dto.getType()),
+                () -> assertEquals(id, dto.getId())
+        );
     }
 
     @Test
