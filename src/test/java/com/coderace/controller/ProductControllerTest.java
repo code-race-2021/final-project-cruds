@@ -1,9 +1,9 @@
 package com.coderace.controller;
 
-import com.coderace.model.dtos.ExampleRequestDTO;
-import com.coderace.model.dtos.ExampleResponseDTO;
+import com.coderace.model.dtos.ProductRequestDTO;
+import com.coderace.model.dtos.ProductResponseDTO;
 import com.coderace.model.exceptions.BadRequestException;
-import com.coderace.service.ExampleService;
+import com.coderace.service.ProductService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@WebMvcTest(controllers = ExampleController.class)
-@DisplayName("ExampleController test | Unit")
-class ExampleControllerTest {
-
+@WebMvcTest(controllers = ProductController.class)
+@DisplayName("ProductController test | Unit")
+class ProductControllerTest {
+    
     @Autowired
     MockMvc mvc;
 
@@ -35,24 +35,24 @@ class ExampleControllerTest {
     ObjectMapper objectMapper;
 
     @MockBean
-    ExampleService service;
-    
+    ProductService service;
+
     @Test
     @DisplayName("create | ok")
     void createOk() throws Exception {
         // given
-        final ExampleRequestDTO request = new ExampleRequestDTO();
-        final ExampleResponseDTO expectedResponse = new ExampleResponseDTO();
+        final ProductRequestDTO request = new ProductRequestDTO();
+        final ProductResponseDTO expectedResponse = new ProductResponseDTO();
 
         when(service.create(request)).thenReturn(expectedResponse);
 
         // when
-        final MvcResult result = mvc.perform(post("/example/create")
+        final MvcResult result = mvc.perform(post("/product/create")
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andReturn();
 
-        final ExampleResponseDTO actualResponse =
-                objectMapper.readValue(result.getResponse().getContentAsString(), ExampleResponseDTO.class);
+        final ProductResponseDTO actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), ProductResponseDTO.class);
 
         // then
         assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
@@ -63,14 +63,14 @@ class ExampleControllerTest {
     @DisplayName("create | when service throws BadRequestException | bad request")
     void createBadRequest() throws Exception {
         // given
-        final ExampleRequestDTO request = new ExampleRequestDTO();
+        final ProductRequestDTO request = new ProductRequestDTO();
 
         final BadRequestException expectedException = new BadRequestException("test-message");
 
         when(service.create(request)).thenThrow(expectedException);
 
         // when
-        final MvcResult result = mvc.perform(post("/example/create")
+        final MvcResult result = mvc.perform(post("/product/create")
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andReturn();
 
@@ -83,16 +83,16 @@ class ExampleControllerTest {
     @DisplayName("getAll | ok")
     void getAllOk() throws Exception {
         // given
-        final List<ExampleResponseDTO> expectedResponse = new ArrayList<>();
+        final List<ProductResponseDTO> expectedResponse = new ArrayList<>();
 
         when(service.getAll()).thenReturn(expectedResponse);
 
         // when
-        final MvcResult result = mvc.perform(get("/example"))
+        final MvcResult result = mvc.perform(get("/product"))
                 .andReturn();
 
-        final List<ExampleResponseDTO> actualResponse =
-                objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ExampleResponseDTO>>(){});
+        final List<ProductResponseDTO> actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ProductResponseDTO>>(){});
 
         // then
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -100,19 +100,19 @@ class ExampleControllerTest {
     }
 
     @Test
-    @DisplayName("getByLongValue | ok")
-    void getByLongValueOk() throws Exception {
+    @DisplayName("getBySku | ok")
+    void getBySkuOk() throws Exception {
         // given
-        final ExampleResponseDTO expectedResponse = new ExampleResponseDTO();
+        final ProductResponseDTO expectedResponse = new ProductResponseDTO();
 
-        when(service.getByLongValue(1)).thenReturn(expectedResponse);
+        when(service.getBySku("sku")).thenReturn(expectedResponse);
 
         // when
-        final MvcResult result = mvc.perform(get("/example/1"))
+        final MvcResult result = mvc.perform(get("/product/sku"))
                 .andReturn();
 
-        final ExampleResponseDTO actualResponse =
-                objectMapper.readValue(result.getResponse().getContentAsString(), ExampleResponseDTO.class);
+        final ProductResponseDTO actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), ProductResponseDTO.class);
 
         // then
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -120,15 +120,15 @@ class ExampleControllerTest {
     }
 
     @Test
-    @DisplayName("getByLongValue | not found")
-    void getByLongValueNotFound() throws Exception {
+    @DisplayName("getBySku | not found")
+    void getBySkuNotFound() throws Exception {
         // given
         final BadRequestException expectedException = new BadRequestException(HttpStatus.NOT_FOUND.value(), "test-message");
 
-        when(service.getByLongValue(1)).thenThrow(expectedException);
+        when(service.getBySku("sku")).thenThrow(expectedException);
 
         // when
-        final MvcResult result = mvc.perform(get("/example/1"))
+        final MvcResult result = mvc.perform(get("/product/sku"))
                 .andReturn();
 
         // then
