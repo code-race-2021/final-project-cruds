@@ -1,11 +1,13 @@
 package com.coderace.service;
 
+import com.coderace.model.dtos.ProductResponseDTO;
 import com.coderace.model.entities.Delivery;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,5 +60,12 @@ public class DeliveryService {
                 .setId(delivery.getId());
 
         return responseDTO;
+    }
+
+    public DeliveryResponseDTO getByCode(String code) {
+        return this.repository.getByCode(code)
+                .map(this::buildDeliveryResponseDTO)
+                .orElseThrow(() -> new BadRequestException(HttpStatus.NOT_FOUND.value(),
+                        String.format("Product with code [%s] not found", code)));
     }
  }
