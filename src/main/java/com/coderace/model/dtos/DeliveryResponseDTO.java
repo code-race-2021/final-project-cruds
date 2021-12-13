@@ -7,8 +7,18 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DeliveryResponseDTO {
+    private int id;
     private String code;
     private String type;
+
+    public int getId() {
+        return id;
+    }
+
+    public DeliveryResponseDTO setId(int id) {
+        this.id = id;
+        return this;
+    }
 
     public String getCode() {
         return code;
@@ -19,12 +29,13 @@ public class DeliveryResponseDTO {
         return this;
     }
     
-    public String getType() {
-        return type;
-    }
-
     public DeliveryResponseDTO setType(String type) {
         this.type = type;
         return this;
     }
+
+    public String getType() {
+        return type;
+    }
+
 }
