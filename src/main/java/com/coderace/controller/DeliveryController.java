@@ -3,6 +3,7 @@ package com.coderace.controller;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
 
+import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.service.DeliveryService;
 
@@ -11,9 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/delivery")
 public class DeliveryController {
+
     @Autowired
     DeliveryService service;
 
@@ -36,11 +40,10 @@ public class DeliveryController {
         }
     }
 
-    // Agregar un endpoint que resuelva la siguiente necesidad:
     // El cliente necesita obtener el presupuesto de un delivery para un valor dado en pesos
     // y además necesita saber cuándo se realizaría la entrega si se solicita en ese momento.
 
-    // Agregar un endpoint en DeliveryController ‘/calculate’ que a partir de un delivery determinado (path variable sku),
+    // A partir de un delivery determinado (path variable sku),
     // y enviando como queryParam un precio, devuelva un json con el costo de esa entrega y la fecha en que llegaría.
 
     // Para esto se deberán usar los datos cost (multiplicador porcentual) y delay de DeliveryType.
@@ -57,10 +60,27 @@ public class DeliveryController {
     }
      */
 
-    @GetMapping("/calculate")
-    public ResponseEntity<Object> getBySku(@PathVariable String sku) {
+    /*
+    @GetMapping("/calculate/{sku}?price")
+    public ResponseEntity<Object> getBySku(@PathVariable String sku, @RequestParam double price) {
+        final DeliveryResponseDTO delivery = this.service.getByCode(sku);
 
+        if ( delivery.getType().equals("regular") ) {
+            final double finalCost = DeliveryType.REGULAR.getCost();
+            final LocalDateTime finalArrival = LocalDateTime.now().plusDays(DeliveryType.REGULAR.getDelay());
+
+            return null;
+
+        } else if ( delivery.getType().equals("express") ) {
+            final double finalCost = DeliveryType.EXPRESS.getCost();
+            final LocalDateTime finalArrival = LocalDateTime.now().plusDays(DeliveryType.EXPRESS.getDelay());
+
+            return null;
+
+        }
     }
+
+     */
 
     @GetMapping
     public ResponseEntity<Object> getAll() {

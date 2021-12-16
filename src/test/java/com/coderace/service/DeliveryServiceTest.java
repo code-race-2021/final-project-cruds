@@ -112,7 +112,6 @@ class DeliveryServiceTest {
         assertEquals(service.buildDeliveryResponseDTO(delivery), result.get(0));
     }
 
-
     private Delivery defaultDelivery() {
         return new Delivery("code1", DeliveryType.REGULAR);
     }
