@@ -27,8 +27,8 @@ public class ExampleController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok().body(this.service.getAll());
+    public ResponseEntity<Object> getAll(@RequestParam (required = false) Long greaterThan) {
+        return ResponseEntity.ok().body(this.service.getAll(greaterThan));
     }
 
     @GetMapping("/{longValue}")

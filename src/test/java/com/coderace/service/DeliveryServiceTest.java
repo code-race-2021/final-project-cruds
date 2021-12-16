@@ -98,7 +98,22 @@ class DeliveryServiceTest {
     }
 
     @Test
-    @DisplayName("getAll | ok")
+    @DisplayName("getAll | deliveries available")
+    void getAllAvailable() {
+        final Delivery delivery = this.defaultDelivery();
+
+        final List<Delivery> all = Collections.singletonList(delivery);
+
+        when(repository.findAll()).thenReturn(all);
+
+        final List<DeliveryResponseDTO> result = service.getAll(true);
+
+        assertEquals(1, result.size());
+        assertEquals(service.buildDeliveryResponseDTO(delivery), result.get(0));
+    }
+
+    @Test
+    @DisplayName("getAll | deliveries not available")
     void getAllOk() {
         final Delivery delivery = this.defaultDelivery();
 
@@ -111,7 +126,6 @@ class DeliveryServiceTest {
         assertEquals(1, result.size());
         assertEquals(service.buildDeliveryResponseDTO(delivery), result.get(0));
     }
-
 
     private Delivery defaultDelivery() {
         return new Delivery("code1", DeliveryType.REGULAR);
