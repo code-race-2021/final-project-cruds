@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/delivery")
 public class DeliveryController {
@@ -28,8 +30,7 @@ public class DeliveryController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok().body(this.service.getAll());
+    public ResponseEntity<Object> getAll(@RequestParam (required = false) boolean available) {
+        return ResponseEntity.ok().body(this.service.getAll(available));
     }
-
 }

@@ -106,7 +106,7 @@ class DeliveryServiceTest {
 
         when(repository.findAll()).thenReturn(all);
 
-        final List<DeliveryResponseDTO> result = service.getAll();
+        final List<DeliveryResponseDTO> result = service.getAll(false);
 
         assertEquals(1, result.size());
         assertEquals(service.buildDeliveryResponseDTO(delivery), result.get(0));
