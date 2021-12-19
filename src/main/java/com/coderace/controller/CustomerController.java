@@ -39,4 +39,8 @@ public class CustomerController {
             return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
         }
     }
+
+    private CustomerService getService() {
+        return this.service;
+    }
 }
