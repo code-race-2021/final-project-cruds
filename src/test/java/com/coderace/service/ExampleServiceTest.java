@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -121,18 +122,36 @@ class ExampleServiceTest {
     }
 
     @Test
-    @DisplayName("getAll | ok")
-    void getAllOk() {
+    @DisplayName("getAll | without 'greaterThan' filter | ok")
+    void getAllWithoutGreaterThanFilterOk() {
         final Example example = this.defaultExample();
 
         final List<Example> all = Collections.singletonList(example);
 
         when(repository.findAll()).thenReturn(all);
 
-        final List<ExampleResponseDTO> result = service.getAll();
+        final List<ExampleResponseDTO> result = service.getAll(null);
 
         assertEquals(1, result.size());
         assertEquals(service.buildExampleResponseDTO(example), result.get(0));
+    }
+
+    @Test
+    @DisplayName("getAll | with 'greaterThan' filter | ok")
+    void getAllWithGreaterThanFilterOk() {
+        final Example exampleShouldBeSkipped = this.defaultExample();
+
+        final Example exampleShouldBeConsidered =
+                new Example(exampleShouldBeSkipped.getLongValue() + 1, 2D, "a", LocalDateTime.MIN, ExampleEnum.B);
+
+        final List<Example> all = Arrays.asList(exampleShouldBeSkipped, exampleShouldBeConsidered);
+
+        when(repository.findAll()).thenReturn(all);
+
+        final List<ExampleResponseDTO> result = service.getAll(exampleShouldBeSkipped.getLongValue());
+
+        assertEquals(1, result.size());
+        assertEquals(service.buildExampleResponseDTO(exampleShouldBeConsidered), result.get(0));
     }
 
     @Test

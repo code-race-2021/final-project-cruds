@@ -172,6 +172,7 @@
 					<excludes>
 						<exclude>**/com/coderace/sql/SQLController.class</exclude>
 						<exclude>**/com/coderace/model/dto/*</exclude>
+						<exclude>**/com/coderace/config/WebConfig.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>

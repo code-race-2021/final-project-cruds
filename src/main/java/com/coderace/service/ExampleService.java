@@ -36,11 +36,16 @@ public class ExampleService {
         return buildExampleResponseDTO(exampleAfterPersistence);
     }
 
-    public List<ExampleResponseDTO> getAll() {
-        return this.repository.findAll().stream().map(this::buildExampleResponseDTO).collect(Collectors.toList());
+    public List<ExampleResponseDTO> getAll(Long greaterThan) {
+        return this.repository.findAll().stream()
+                .filter(example -> this.isLongValueGreaterThan(example.getLongValue(), greaterThan)) // filter es como un foreach que pregunta a cada example si cumple la condición
+                .map(this::buildExampleResponseDTO) // armo response DTOs
+                .collect(Collectors.toList()); // los junto en lista
     }
 
-
+    private boolean isLongValueGreaterThan(Long longValue, Long greaterThan) {
+        return greaterThan == null || longValue > greaterThan;
+    }
 
     private LocalDateTime resolveDateValue(String dateValue) {
         try {
