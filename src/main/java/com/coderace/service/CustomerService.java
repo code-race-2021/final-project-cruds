@@ -22,9 +22,9 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO create(CustomerRequestDTO requestDTO) {
-        try {
-            this.validate(requestDTO);
+        this.validate(requestDTO);
 
+        try {
             return this.buildCustomerResponseDTO(repository.save(new Customer(requestDTO.getName(), requestDTO.getDni(), requestDTO.getEmail())));
         } catch (Exception e) {
             return null;
@@ -38,14 +38,14 @@ public class CustomerService {
     private void validate(CustomerRequestDTO requestDTO) {
         String errorMessage = "";
 
-        final boolean isValidEmail = !this.isNotValidEmail(requestDTO.getEmail());
+        final boolean isValidEmail = requestDTO.getEmail() == null || !this.isNotValidEmail(requestDTO.getEmail());
 
         if (!isValidEmail) {
             errorMessage = "Email is invalid";
         }
 
-        if (requestDTO.getDni() <= 0) {
-            errorMessage = "DNI must be positive";
+        if (requestDTO.getDni() == null || requestDTO.getDni() <= 0) {
+            errorMessage = "Dni must be positive";
         }
 
         if (errorMessage.equals("")) {
@@ -69,9 +69,9 @@ public class CustomerService {
             invalid = true;
         } else { // then check that the dot is after the at
             final int atPosition = chars.indexOf(at);
-            final int dotPosition = chars.indexOf(dot);
+            final int lastDotPosition = chars.lastIndexOf(dot);
 
-            if (dotPosition < atPosition) {
+            if (lastDotPosition < atPosition) {
                 invalid = true;
             }
         }
