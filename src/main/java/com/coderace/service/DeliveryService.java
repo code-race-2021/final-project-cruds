@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 public class DeliveryService {
     private final DeliveryRepository repository;
 
-    public DeliveryService(DeliveryRepository repository) {
-        this.repository = repository;
+    public DeliveryService(DeliveryRepository repository) { this.repository = repository;
     }
 
     public DeliveryResponseDTO create(DeliveryRequestDTO requestDTO) {
@@ -30,10 +29,6 @@ public class DeliveryService {
         return buildDeliveryResponseDTO(deliveryAfterPersistence);
     }
 
-    public List<DeliveryResponseDTO> getAll() {
-        return this.repository.findAll().stream().map(this::buildDeliveryResponseDTO).collect(Collectors.toList());
-    }
-
     private String resolveCode(String code) {
         int codeLength = code.length();
         for (int i = 0; i < codeLength; i++) {
@@ -42,6 +37,10 @@ public class DeliveryService {
             }
         }
         return code.toUpperCase();
+    }
+
+    public List<DeliveryResponseDTO> getAll() {
+        return this.repository.findAll().stream().map(this::buildDeliveryResponseDTO).collect(Collectors.toList());
     }
 
     private DeliveryType resolveType(String type) {
