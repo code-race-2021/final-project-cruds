@@ -92,7 +92,7 @@ class ExampleControllerTest {
         // when
         final MvcResult result = mvc.perform(get("/example")
                         .param("greaterThan", String.valueOf(greaterThan)))
-                .andReturn();
+                        .andReturn();
 
         final List<ExampleResponseDTO> actualResponse =
                 objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ExampleResponseDTO>>(){});
