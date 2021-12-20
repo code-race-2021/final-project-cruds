@@ -30,7 +30,7 @@ public class DeliveryController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAll(@RequestParam (required = false) boolean available) {
+    public ResponseEntity<Object> getAll(@RequestParam (required = false, defaultValue = "false") boolean available) {
         return ResponseEntity.ok().body(this.service.getAll(available));
     }
 }

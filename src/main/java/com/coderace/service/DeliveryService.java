@@ -39,11 +39,7 @@ public class DeliveryService {
     }
 
     private boolean isAvailable(LocalDateTime date, boolean available) {
-        if (available) {        // si available es true...
-            return date == null;    // devuelvo sólo los date que son null
-        } else {
-            return true;        // si available es false, devuelvo todos los valores por default
-        }
+            return !available || date == null;
     }
 
     private String resolveCode(String code) {
