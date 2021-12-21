@@ -29,6 +29,15 @@ public class DeliveryController {
         }
     }
 
+    @GetMapping("/{code}")
+    public ResponseEntity<Object> getByCode(@PathVariable String code) {
+        try {
+            return ResponseEntity.ok().body(this.service.getByCode(code));
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
+        }
+    }
+
     @GetMapping
     public ResponseEntity<Object> getAll(@RequestParam (required = false, defaultValue = "false") boolean available) {
         return ResponseEntity.ok().body(this.service.getAll(available));
