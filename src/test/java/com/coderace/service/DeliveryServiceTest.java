@@ -8,6 +8,7 @@ import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
+import org.hibernate.collection.internal.PersistentList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -126,20 +129,44 @@ class DeliveryServiceTest {
     }
 
     @Test
-    @DisplayName("getAll | ok")
-    void getAllOk() {
-        final Delivery delivery = this.defaultDelivery();
+    @DisplayName("getAll | all deliveries")
+    void getAllDeliveries() {
+        final LocalDateTime deliveryDateNotAvailable = LocalDateTime.now();
 
-        final List<Delivery> all = Collections.singletonList(delivery);
+        final Delivery deliveryWithoutDate = this.defaultDelivery();
+        final Delivery deliveryWithDate = this.defaultDelivery();
+        deliveryWithDate.setDate(deliveryDateNotAvailable);
+
+        final List<Delivery> all = new ArrayList<>();
+        all.add(deliveryWithoutDate);
+        all.add(deliveryWithDate);
 
         when(repository.findAll()).thenReturn(all);
 
-        final List<DeliveryResponseDTO> result = service.getAll();
+        final List<DeliveryResponseDTO> result = service.getAll(false);
 
-        assertEquals(1, result.size());
-        assertEquals(service.buildDeliveryResponseDTO(delivery), result.get(0));
+        assertEquals(2, result.size());
     }
 
+    @Test
+    @DisplayName("getAll | deliveries not available")
+    void getAllNotAvailable() {
+        final LocalDateTime deliveryDateNotAvailable = LocalDateTime.now();
+
+        final Delivery deliveryWithoutDate = this.defaultDelivery();
+        final Delivery deliveryWithDate = this.defaultDelivery();
+        deliveryWithDate.setDate(deliveryDateNotAvailable);
+
+        final List<Delivery> all = new ArrayList<>();
+        all.add(deliveryWithoutDate);
+        all.add(deliveryWithDate);
+
+        when(repository.findAll()).thenReturn(all);
+
+        final List<DeliveryResponseDTO> result = service.getAll(true);
+
+        assertEquals(1, result.size());
+    }
 
     private Delivery defaultDelivery() {
         return new Delivery("code1", DeliveryType.REGULAR);

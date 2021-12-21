@@ -123,7 +123,7 @@ class DeliveryControllerTest {
         // given
         final List<DeliveryResponseDTO> expectedResponse = new ArrayList<>();
 
-        when(service.getAll()).thenReturn(expectedResponse);
+        when(service.getAll(false)).thenReturn(expectedResponse);
 
         // when
         final MvcResult result = mvc.perform(get("/delivery"))
