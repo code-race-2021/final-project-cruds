@@ -121,7 +121,7 @@ class DeliveryServiceTest {
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode()),
-                () -> assertEquals(String.format("Product with code [code1] not found"), exception.getMessage())
+                () -> assertEquals(String.format("Delivery with code [code1] not found"), exception.getMessage())
         );
     }
 

@@ -66,6 +66,6 @@ public class DeliveryService {
         return this.repository.getByCode(code)
                 .map(this::buildDeliveryResponseDTO)
                 .orElseThrow(() -> new BadRequestException(HttpStatus.NOT_FOUND.value(),
-                        String.format("Product with code [%s] not found", code)));
+                        String.format("Delivery with code [%s] not found", code)));
     }
  }
