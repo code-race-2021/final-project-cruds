@@ -8,6 +8,7 @@ import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,15 @@ public class DeliveryService {
         return buildDeliveryResponseDTO(deliveryAfterPersistence);
     }
 
-    public List<DeliveryResponseDTO> getAll() {
-        return this.repository.findAll().stream().map(this::buildDeliveryResponseDTO).collect(Collectors.toList());
+    public List<DeliveryResponseDTO> getAll(boolean available) {
+            return this.repository.findAll().stream()
+                    .filter(delivery -> this.isAvailable(delivery.getDate(), available))
+                    .map(this::buildDeliveryResponseDTO)
+                    .collect(Collectors.toList());
+    }
+
+    private boolean isAvailable(LocalDateTime date, boolean available) {
+            return !available || date == null;
     }
 
     private String resolveCode(String code) {

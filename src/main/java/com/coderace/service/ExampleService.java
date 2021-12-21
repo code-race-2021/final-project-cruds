@@ -29,7 +29,7 @@ public class ExampleService {
         final ExampleEnum enumValue = resolveEnumValue(requestDTO.getEnumValue());
 
         final Example exampleBeforePersistence = new Example(requestDTO.getLongValue(), requestDTO.getDoubleValue(),
-            requestDTO.getStringValue(), dateValue, enumValue);
+                requestDTO.getStringValue(), dateValue, enumValue);
 
         final Example exampleAfterPersistence = repository.save(exampleBeforePersistence);
 
