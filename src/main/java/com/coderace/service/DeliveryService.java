@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 public class DeliveryService {
     private final DeliveryRepository repository;
 
-    public DeliveryService(DeliveryRepository repository) { this.repository = repository;
+    public DeliveryService(DeliveryRepository repository) {
+        this.repository = repository;
     }
 
     public DeliveryResponseDTO create(DeliveryRequestDTO requestDTO) {

@@ -114,7 +114,7 @@ class CustomerServiceTest {
         assertAll("Expected dto",
                 () -> assertEquals(name, dto.getName()),
                 () -> assertEquals(dni, dto.getDni()),
-                () -> assertEquals(dni, dto.getDni())
+                () -> assertEquals(email, dto.getEmail())
         );
     }
 

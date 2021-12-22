@@ -24,11 +24,11 @@ public class CustomerService {
     public CustomerResponseDTO create(CustomerRequestDTO requestDTO) {
         this.validate(requestDTO);
 
-        try {
-            return this.buildCustomerResponseDTO(repository.save(new Customer(requestDTO.getName(), requestDTO.getDni(), requestDTO.getEmail())));
-        } catch (Exception e) {
-            return null;
-        }
+        final Customer customer = repository.save(
+                new Customer(requestDTO.getName(), requestDTO.getDni(), requestDTO.getEmail())
+        );
+
+        return this.buildCustomerResponseDTO(customer);
     }
 
     public List<CustomerResponseDTO> getAll() {
