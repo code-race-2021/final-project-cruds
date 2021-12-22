@@ -36,27 +36,31 @@ public class CustomerService {
     }
 
     private void validate(CustomerRequestDTO requestDTO) {
-        String errorMessage = "";
+        final String errorMessage;
 
-        final boolean isValidEmail = requestDTO.getEmail() == null || !this.isNotValidEmail(requestDTO.getEmail());
-
-        if (!isValidEmail) {
+        if (this.isEmailInvalid(requestDTO.getEmail())) {
             errorMessage = "Email is invalid";
-        }
-
-        if (requestDTO.getDni() == null || requestDTO.getDni() <= 0) {
-            errorMessage = "Dni must be positive";
-        }
-
-        if (errorMessage.equals("")) {
-            return;
+        } else if (this.isDniInvalid(requestDTO.getDni())) {
+            errorMessage = "Dni is invalid";
         } else {
+            errorMessage = null;
+        }
+
+        if (errorMessage != null) {
             throw new BadRequestException(errorMessage);
         }
     }
 
-    // a valid emails contains "@" followed by ".'
-    private boolean isNotValidEmail(String email) {
+    private boolean isDniInvalid(Long dni) {
+        return dni == null || dni <= 0 || String.valueOf(dni).length() != 8;
+    }
+
+    // a valid emails contains "@" followed by "."
+    private boolean isEmailInvalid(String email) {
+        if (email == null) {
+            return true;
+        }
+
         boolean invalid = false;
 
         final String at = "@";

@@ -38,7 +38,7 @@ class CustomerServiceTest {
     void createOk() {
         final CustomerRequestDTO requestDTO = new CustomerRequestDTO();
         requestDTO.setName("name");
-        requestDTO.setDni(1L);
+        requestDTO.setDni(12345678L);
         requestDTO.setEmail(VALID_EMAIL);
 
         final Customer customer = this.defaultCustomer();
@@ -56,12 +56,29 @@ class CustomerServiceTest {
         final CustomerRequestDTO requestDTO = new CustomerRequestDTO();
 
         requestDTO.setDni(-1L);
+        requestDTO.setEmail(VALID_EMAIL);
 
         final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
-                () -> assertEquals("Dni must be positive", exception.getMessage())
+                () -> assertEquals("Dni is invalid", exception.getMessage())
+        );
+    }
+
+    @Test
+    @DisplayName("create | given dni without 8 characters | should throw BadRequestException")
+    void createDniWithoutEightChars() {
+        final CustomerRequestDTO requestDTO = new CustomerRequestDTO();
+
+        requestDTO.setDni(1234567L);
+        requestDTO.setEmail(VALID_EMAIL);
+
+        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
+
+        assertAll("Expected exception",
+                () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
+                () -> assertEquals("Dni is invalid", exception.getMessage())
         );
     }
 
