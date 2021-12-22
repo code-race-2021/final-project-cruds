@@ -1,6 +1,5 @@
 package com.coderace.service;
 
-import com.coderace.model.dtos.ExampleRequestDTO;
 import com.coderace.model.dtos.ServiceRequestDTO;
 import com.coderace.model.dtos.ServiceResponseDTO;
 import com.coderace.model.entities.Service;
@@ -41,8 +40,8 @@ public class ServiceService {
     }
 
     private void validate(ServiceRequestDTO requestDTO) {
-        if (!requestDTO.getSku().matches("[a-zA-Z0-9]*")) {
-            throw new BadRequestException("sku no debe tener caracteres especiales");
+        if (ValidationUtils.hasSpecialCharacters(requestDTO.getSku())) {
+            throw new BadRequestException("sku must not have special characters");
         }
         if (requestDTO.getDays() <= 0) {
             throw new BadRequestException("Days must be greater than 0");

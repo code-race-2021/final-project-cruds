@@ -1,9 +1,11 @@
 package com.coderace.service;
 
+import com.coderace.model.dtos.ServiceRequestDTO;
 import com.coderace.model.entities.Delivery;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
+import com.coderace.model.enums.ServiceType;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
 import org.springframework.stereotype.Service;
@@ -20,29 +22,31 @@ public class DeliveryService {
     }
 
     public DeliveryResponseDTO create(DeliveryRequestDTO requestDTO) {
-        final DeliveryType type = resolveType(requestDTO.getType());
-        final String code = resolveCode(requestDTO.getCode());
+        this.validate(requestDTO);
 
-        final Delivery deliveryBeforePersistence = new Delivery(code, type);
 
-        final Delivery deliveryAfterPersistence = repository.save(deliveryBeforePersistence);
+        final DeliveryType deliveryType = resolveType(requestDTO.getType());
 
-        return buildDeliveryResponseDTO(deliveryAfterPersistence);
+        final Delivery delivery = new Delivery(requestDTO.getCode(), deliveryType);
+
+        return buildDeliveryResponseDTO(repository.save(delivery));
+
+
     }
+
 
     public List<DeliveryResponseDTO> getAll() {
         return this.repository.findAll().stream().map(this::buildDeliveryResponseDTO).collect(Collectors.toList());
     }
 
-    private String resolveCode(String code) {
-        int codeLength = code.length();
-        for (int i = 0; i < codeLength; i++) {
-            if (!Character.isLetterOrDigit(code.charAt(i))) {
-                throw new BadRequestException("Invalid code: " + code);
+
+        private void validate(DeliveryRequestDTO requestDTO) {
+            if (ValidationUtils.hasSpecialCharacters(requestDTO.getCode())) {
+                throw new BadRequestException("Invalid code");
             }
         }
-        return code.toUpperCase();
-    }
+
+
 
     private DeliveryType resolveType(String type) {
         return DeliveryType.fromCode(type)

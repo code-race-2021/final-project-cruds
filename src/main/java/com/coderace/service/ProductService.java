@@ -37,7 +37,7 @@ public class ProductService {
     }
 
     private void validate(ProductRequestDTO requestDTO) {
-        if (StringUtil.isNullOrEmpty(requestDTO.getSku()) || this.containsInvalidCharacters(requestDTO.getSku())) {
+        if (ValidationUtils.hasSpecialCharacters(requestDTO.getSku())) {
             throw new BadRequestException("Product sku is invalid");
         }
 

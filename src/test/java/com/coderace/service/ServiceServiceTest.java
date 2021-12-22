@@ -97,7 +97,7 @@ class ServiceServiceTest {
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
-                () -> assertEquals("sku no debe tener caracteres especiales", exception.getMessage())
+                () -> assertEquals("sku must not have special characters", exception.getMessage())
         );
     }
 

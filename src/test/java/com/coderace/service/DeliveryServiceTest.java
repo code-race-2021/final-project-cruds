@@ -1,9 +1,11 @@
 package com.coderace.service;
 
+import com.coderace.model.dtos.ServiceRequestDTO;
 import com.coderace.model.entities.Delivery;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
+import com.coderace.model.enums.ServiceType;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -47,19 +49,25 @@ class DeliveryServiceTest {
         assertEquals(service.buildDeliveryResponseDTO(delivery), responseDTO);
     }
 
-
     @Test
     @DisplayName("create | given invalid code value | should throw BadRequestException")
     void createInvalidCodeValueOk() {
-        final DeliveryRequestDTO requestDTO = new DeliveryRequestDTO().setCode("code_1").setType("regular");
+        final String invalidCodeString = "?=¿";
+
+        final DeliveryRequestDTO requestDTO = new DeliveryRequestDTO()
+                .setCode(invalidCodeString)
+                .setType(DeliveryType.REGULAR.getCode());
+
+
 
         final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
 
         assertAll("Expected exception",
                 () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
-                () -> assertEquals("Invalid code: code_1", exception.getMessage())
+                () -> assertEquals("Invalid code", exception.getMessage())
         );
     }
+
 
 
     @Test
