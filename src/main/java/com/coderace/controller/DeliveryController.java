@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/delivery")
 public class DeliveryController {
@@ -27,9 +29,17 @@ public class DeliveryController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok().body(this.service.getAll());
+    @GetMapping("/{code}")
+    public ResponseEntity<Object> getByCode(@PathVariable String code) {
+        try {
+            return ResponseEntity.ok().body(this.service.getByCode(code));
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
+        }
     }
 
+    @GetMapping
+    public ResponseEntity<Object> getAll(@RequestParam (required = false, defaultValue = "false") boolean available) {
+        return ResponseEntity.ok().body(this.service.getAll(available));
+    }
 }

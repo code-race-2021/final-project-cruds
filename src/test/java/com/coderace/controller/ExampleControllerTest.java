@@ -36,7 +36,7 @@ class ExampleControllerTest {
 
     @MockBean
     ExampleService service;
-    
+
     @Test
     @DisplayName("create | ok")
     void createOk() throws Exception {
@@ -48,7 +48,7 @@ class ExampleControllerTest {
 
         // when
         final MvcResult result = mvc.perform(post("/example/create")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andReturn();
 
         final ExampleResponseDTO actualResponse =
@@ -71,7 +71,7 @@ class ExampleControllerTest {
 
         // when
         final MvcResult result = mvc.perform(post("/example/create")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request)))
                 .andReturn();
 
         // then
@@ -91,8 +91,8 @@ class ExampleControllerTest {
 
         // when
         final MvcResult result = mvc.perform(get("/example")
-                .param("greaterThan", String.valueOf(greaterThan)))
-                .andReturn();
+                        .param("greaterThan", String.valueOf(greaterThan)))
+                        .andReturn();
 
         final List<ExampleResponseDTO> actualResponse =
                 objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<List<ExampleResponseDTO>>(){});

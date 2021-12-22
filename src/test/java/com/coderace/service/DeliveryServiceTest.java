@@ -1,11 +1,14 @@
 package com.coderace.service;
 
+import com.coderace.model.dtos.ExampleResponseDTO;
 import com.coderace.model.entities.Delivery;
+import com.coderace.model.entities.Example;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.repository.DeliveryRepository;
+import org.hibernate.collection.internal.PersistentList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +17,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -98,20 +104,69 @@ class DeliveryServiceTest {
     }
 
     @Test
-    @DisplayName("getAll | ok")
-    void getAllOk() {
+    @DisplayName("getByCode | ok")
+    void getByCodeOk() {
         final Delivery delivery = this.defaultDelivery();
 
-        final List<Delivery> all = Collections.singletonList(delivery);
+        when(repository.getByCode("code1")).thenReturn(Optional.of(delivery));
+
+        final DeliveryResponseDTO responseDTO = service.getByCode("code1");
+
+        assertEquals(service.buildDeliveryResponseDTO(delivery), responseDTO);
+    }
+
+    @Test
+    @DisplayName("getByCode | not found | should throw BadRequestException")
+    void getByCodeNotFound() {
+        when(repository.getByCode("code1")).thenReturn(Optional.empty());
+
+        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.getByCode("code1"));
+
+        assertAll("Expected exception",
+                () -> assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode()),
+                () -> assertEquals(String.format("Delivery with code [code1] not found"), exception.getMessage())
+        );
+    }
+
+    @Test
+    @DisplayName("getAll | all deliveries")
+    void getAllDeliveries() {
+        final LocalDateTime deliveryDateNotAvailable = LocalDateTime.now();
+
+        final Delivery deliveryWithoutDate = this.defaultDelivery();
+        final Delivery deliveryWithDate = this.defaultDelivery();
+        deliveryWithDate.setDate(deliveryDateNotAvailable);
+
+        final List<Delivery> all = new ArrayList<>();
+        all.add(deliveryWithoutDate);
+        all.add(deliveryWithDate);
 
         when(repository.findAll()).thenReturn(all);
 
-        final List<DeliveryResponseDTO> result = service.getAll();
+        final List<DeliveryResponseDTO> result = service.getAll(false);
 
-        assertEquals(1, result.size());
-        assertEquals(service.buildDeliveryResponseDTO(delivery), result.get(0));
+        assertEquals(2, result.size());
     }
 
+    @Test
+    @DisplayName("getAll | deliveries not available")
+    void getAllNotAvailable() {
+        final LocalDateTime deliveryDateNotAvailable = LocalDateTime.now();
+
+        final Delivery deliveryWithoutDate = this.defaultDelivery();
+        final Delivery deliveryWithDate = this.defaultDelivery();
+        deliveryWithDate.setDate(deliveryDateNotAvailable);
+
+        final List<Delivery> all = new ArrayList<>();
+        all.add(deliveryWithoutDate);
+        all.add(deliveryWithDate);
+
+        when(repository.findAll()).thenReturn(all);
+
+        final List<DeliveryResponseDTO> result = service.getAll(true);
+
+        assertEquals(1, result.size());
+    }
 
     private Delivery defaultDelivery() {
         return new Delivery("code1", DeliveryType.REGULAR);

@@ -2,6 +2,8 @@ package com.coderace.controller;
 
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
+import com.coderace.model.dtos.ExampleResponseDTO;
+import com.coderace.model.entities.Delivery;
 import com.coderace.model.exceptions.BadRequestException;
 import com.coderace.service.DeliveryService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -79,12 +81,49 @@ class DeliveryControllerTest {
     }
 
     @Test
+    @DisplayName("getByCode | ok")
+    void getByCodeOk() throws Exception {
+        // given
+        final DeliveryResponseDTO expectedResponse = new DeliveryResponseDTO();
+
+        when(service.getByCode("code1")).thenReturn(expectedResponse);
+
+        // when
+        final MvcResult result = mvc.perform(get("/delivery/code1"))
+                .andReturn();
+
+        final DeliveryResponseDTO actualResponse =
+                objectMapper.readValue(result.getResponse().getContentAsString(), DeliveryResponseDTO.class);
+
+        // then
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("getByCode | when service throws BadRequestException | not found")
+    void getByCodeNotFound() throws Exception {
+        // given
+        final BadRequestException expectedException = new BadRequestException(HttpStatus.NOT_FOUND.value(), "test-message");
+
+        when(service.getByCode("code1")).thenThrow(expectedException);
+
+        // when
+        final MvcResult result = mvc.perform(get("/delivery/code1"))
+                .andReturn();
+
+        // then
+        assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
+        assertEquals(expectedException.getMessage(), result.getResponse().getContentAsString());
+    }
+
+    @Test
     @DisplayName("getAll | ok")
     void getAllOk() throws Exception {
         // given
         final List<DeliveryResponseDTO> expectedResponse = new ArrayList<>();
 
-        when(service.getAll()).thenReturn(expectedResponse);
+        when(service.getAll(false)).thenReturn(expectedResponse);
 
         // when
         final MvcResult result = mvc.perform(get("/delivery"))
