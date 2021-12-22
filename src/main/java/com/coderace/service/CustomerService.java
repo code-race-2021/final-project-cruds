@@ -51,16 +51,12 @@ public class CustomerService {
         }
     }
 
-    private boolean isDniInvalid(Long dni) {
-        return dni == null || dni <= 0 || String.valueOf(dni).length() != 8;
+    private boolean isDniInvalid(long dni) {
+        return dni <= 0 || String.valueOf(dni).length() != 8;
     }
 
     // a valid emails contains "@" followed by "."
     private boolean isEmailInvalid(String email) {
-        if (email == null) {
-            return true;
-        }
-
         boolean invalid = false;
 
         final String at = "@";

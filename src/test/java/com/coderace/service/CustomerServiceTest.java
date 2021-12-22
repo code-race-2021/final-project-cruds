@@ -98,6 +98,23 @@ class CustomerServiceTest {
                 () -> assertEquals("Email is invalid", exception.getMessage())
         );
     }
+
+    @Test
+    @DisplayName("create | given invalid email without dot at first | should throw BadRequestException")
+    void createInvalidEmailWithoutDotAtFirst() {
+        final String invalidEmail = ".@";
+
+        final CustomerRequestDTO requestDTO = new CustomerRequestDTO();
+
+        requestDTO.setEmail(invalidEmail);
+
+        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.create(requestDTO));
+
+        assertAll("Expected exception",
+                () -> assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode()),
+                () -> assertEquals("Email is invalid", exception.getMessage())
+        );
+    }
     
 
     @Test
