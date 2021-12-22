@@ -52,10 +52,6 @@ public class DeliveryService {
         return code.toUpperCase();
     }
 
-    public List<DeliveryResponseDTO> getAll() {
-        return this.repository.findAll().stream().map(this::buildDeliveryResponseDTO).collect(Collectors.toList());
-    }
-
     private DeliveryType resolveType(String type) {
         return DeliveryType.fromCode(type)
                 .orElseThrow(() -> new BadRequestException("Invalid delivery type: " + type));
