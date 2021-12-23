@@ -1,6 +1,8 @@
 package com.coderace.service;
 
+import com.coderace.model.dtos.ExampleResponseDTO;
 import com.coderace.model.entities.Delivery;
+import com.coderace.model.entities.Example;
 import com.coderace.model.enums.DeliveryType;
 import com.coderace.model.dtos.DeliveryRequestDTO;
 import com.coderace.model.dtos.DeliveryResponseDTO;
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -97,6 +100,31 @@ class DeliveryServiceTest {
                 () -> assertEquals(code, dto.getCode()),
                 () -> assertEquals(type.getCode(), dto.getType()),
                 () -> assertEquals(id, dto.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("getByCode | ok")
+    void getByCodeOk() {
+        final Delivery delivery = this.defaultDelivery();
+
+        when(repository.getByCode("code1")).thenReturn(Optional.of(delivery));
+
+        final DeliveryResponseDTO responseDTO = service.getByCode("code1");
+
+        assertEquals(service.buildDeliveryResponseDTO(delivery), responseDTO);
+    }
+
+    @Test
+    @DisplayName("getByCode | not found | should throw BadRequestException")
+    void getByCodeNotFound() {
+        when(repository.getByCode("code1")).thenReturn(Optional.empty());
+
+        final BadRequestException exception = assertThrows(BadRequestException.class, () -> service.getByCode("code1"));
+
+        assertAll("Expected exception",
+                () -> assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode()),
+                () -> assertEquals(String.format("Delivery with code [code1] not found"), exception.getMessage())
         );
     }
 
