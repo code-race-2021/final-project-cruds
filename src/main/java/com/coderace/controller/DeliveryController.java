@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/delivery")
@@ -83,7 +84,8 @@ public class DeliveryController {
      */
 
     @GetMapping
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok().body(this.service.getAll());
+    public ResponseEntity<Object> getAll(@RequestParam (required = false, defaultValue = "false") boolean available) {
+        return ResponseEntity.ok().body(this.service.getAll(available));
     }
 }
+
